@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Azure.Identity;
 using Azure.ResourceManager;
@@ -11,7 +10,7 @@ using Soenneker.Utils.AsyncSingleton;
 
 namespace Soenneker.Azure.Utils.ArmClientUtil;
 
-public class ArmClientUtil : IArmClientUtil
+public sealed class ArmClientUtil : IArmClientUtil
 {
     private readonly AsyncSingleton<ArmClient> _client;
 
@@ -38,15 +37,11 @@ public class ArmClientUtil : IArmClientUtil
 
     public ValueTask DisposeAsync()
     {
-        GC.SuppressFinalize(this);
-
         return _client.DisposeAsync();
     }
 
     public void Dispose()
     {
-        GC.SuppressFinalize(this);
-
         _client.Dispose();
     }
 }
