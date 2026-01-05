@@ -13,21 +13,27 @@ namespace Soenneker.Azure.Utils.ArmClientUtil;
 public sealed class ArmClientUtil : IArmClientUtil
 {
     private readonly AsyncSingleton<ArmClient> _client;
+    private readonly IConfiguration _configuration;
+    private readonly ILogger<ArmClientUtil> _logger;
 
     public ArmClientUtil(IConfiguration configuration, ILogger<ArmClientUtil> logger)
     {
-        _client = new AsyncSingleton<ArmClient>(() =>
-        {
-            var tenantId = configuration.GetValueStrict<string>("Azure:TenantId");
-            var appRegistrationId = configuration.GetValueStrict<string>("Azure:AppRegistration:Id");
-            var appRegistrationSecret = configuration.GetValueStrict<string>("Azure:AppRegistration:Secret");
+        _configuration = configuration;
+        _logger = logger;
+        _client = new AsyncSingleton<ArmClient>(CreateClient);
+    }
 
-            logger.LogDebug("Initializing Azure ArmClient...");
+    private ArmClient CreateClient()
+    {
+        var tenantId = _configuration.GetValueStrict<string>("Azure:TenantId");
+        var appRegistrationId = _configuration.GetValueStrict<string>("Azure:AppRegistration:Id");
+        var appRegistrationSecret = _configuration.GetValueStrict<string>("Azure:AppRegistration:Secret");
 
-            var armCredentials = new ClientSecretCredential(tenantId, appRegistrationId, appRegistrationSecret);
+        _logger.LogDebug("Initializing Azure ArmClient...");
 
-            return new ArmClient(armCredentials);
-        });
+        var armCredentials = new ClientSecretCredential(tenantId, appRegistrationId, appRegistrationSecret);
+
+        return new ArmClient(armCredentials);
     }
 
     public ValueTask<ArmClient> Get(CancellationToken cancellationToken = default)
