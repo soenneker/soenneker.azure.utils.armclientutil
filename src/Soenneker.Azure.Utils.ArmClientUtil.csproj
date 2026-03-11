@@ -44,6 +44,6 @@
         <PackageReference Include="Azure.Identity" Version="1.18.0" />
         <PackageReference Include="Azure.ResourceManager" Version="1.14.0" />
         <PackageReference Include="Soenneker.Extensions.Configuration" Version="4.0.797" />
-        <PackageReference Include="Soenneker.Utils.AsyncSingleton" Version="4.0.769" />
+        <PackageReference Include="Soenneker.Utils.AsyncSingleton" Version="4.0.771" />
     </ItemGroup>
 </Project>
