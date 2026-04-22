@@ -1,20 +1,19 @@
-﻿using Soenneker.Azure.Utils.ArmClientUtil.Abstract;
-using Soenneker.Tests.FixturedUnit;
-using Xunit;
+using Soenneker.Azure.Utils.ArmClientUtil.Abstract;
+using Soenneker.Tests.HostedUnit;
 
 namespace Soenneker.Azure.Utils.ArmClientUtil.Tests;
 
-[Collection("Collection")]
-public class ArmClientUtilTests : FixturedUnitTest
+[ClassDataSource<Host>(Shared = SharedType.PerTestSession)]
+public class ArmClientUtilTests : HostedUnitTest
 {
     private readonly IArmClientUtil _util;
 
-    public ArmClientUtilTests(Fixture fixture, ITestOutputHelper output) : base(fixture, output)
+    public ArmClientUtilTests(Host host) : base(host)
     {
         _util = Resolve<IArmClientUtil>(true);
     }
 
-    [Fact]
+    [Test]
     public void Default()
     {
 
