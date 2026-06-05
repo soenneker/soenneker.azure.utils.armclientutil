@@ -10,5 +10,10 @@ namespace Soenneker.Azure.Utils.ArmClientUtil.Abstract;
 /// </summary>
 public interface IArmClientUtil : IAsyncDisposable, IDisposable
 {
+    /// <summary>
+    /// Gets the value.
+    /// </summary>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task containing the result of the operation.</returns>
     ValueTask<ArmClient> Get(CancellationToken cancellationToken = default);
 }
