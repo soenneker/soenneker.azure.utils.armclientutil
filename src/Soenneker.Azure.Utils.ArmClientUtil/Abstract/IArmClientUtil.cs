@@ -11,9 +11,9 @@ namespace Soenneker.Azure.Utils.ArmClientUtil.Abstract;
 public interface IArmClientUtil : IAsyncDisposable, IDisposable
 {
     /// <summary>
-    /// Gets the value.
+    /// Returns the configured arm Client used by the arm client.
     /// </summary>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A task containing the result of the operation.</returns>
+    /// <param name="cancellationToken">Token used to cancel the operation.</param>
+    /// <returns>A task whose result is the requested arm Client.</returns>
     ValueTask<ArmClient> Get(CancellationToken cancellationToken = default);
 }
