@@ -5,40 +5,65 @@
 
 # Soenneker.Azure.Utils.ArmClientUtil
 
-A .NET thread-safe singleton for ArmClient, the Azure Resource Manager.
+Creates and caches an Azure Resource Manager `ArmClient` authenticated with a service-principal client secret.
 
-## Install
+## Installation
 
 ```bash
 dotnet add package Soenneker.Azure.Utils.ArmClientUtil
 ```
 
-## Quick start
+## Configuration
 
-```csharp
-using Soenneker.Azure.Utils.ArmClientUtil.Registrars;
-using Microsoft.Extensions.DependencyInjection;
-
-var services = new ServiceCollection();
-var result = services.AddArmClientUtilAsSingleton();
+```json
+{
+  "Azure": {
+    "TenantId": "tenant-guid",
+    "AppRegistration": {
+      "Id": "application-client-id",
+      "Secret": "client-secret"
+    }
+  }
+}
 ```
 
-Adds `IArmClientUtil` as a singleton service.
+Store the secret in Azure Key Vault, an environment variable, or another secret provider. Assign the service principal only the Azure RBAC roles its callers need.
 
-## What you get
+## Registration and use
 
-- `IArmClientUtil` — A .NET thread-safe singleton for ArmClient, the Azure Resource Manager.
-- `ArmClientUtilRegistrar` — A .NET thread-safe singleton for ArmClient, the Azure Resource Manager.
+```csharp
+using Azure.ResourceManager;
+using Azure.ResourceManager.Resources;
+using Soenneker.Azure.Utils.ArmClientUtil.Abstract;
+using Soenneker.Azure.Utils.ArmClientUtil.Registrars;
 
-## API at a glance
+builder.Services.AddArmClientUtilAsSingleton();
 
-| API | What it does | Result / important behavior |
-| --- | --- | --- |
-| `ArmClientUtilRegistrar.AddArmClientUtilAsSingleton(services)` | Adds `IArmClientUtil` as a singleton service. | The same service collection, so additional registrations can be chained. |
-| `ArmClientUtilRegistrar.AddArmClientUtilAsScoped(services)` | Adds `IArmClientUtil` as a scoped service. | The same service collection, so additional registrations can be chained. |
+public sealed class SubscriptionReader(IArmClientUtil armClientUtil)
+{
+    public async Task<List<string>> GetSubscriptionNames(
+        CancellationToken cancellationToken)
+    {
+        ArmClient client = await armClientUtil.Get(cancellationToken);
+        var names = new List<string>();
 
-## Practical notes
+        await foreach (SubscriptionResource subscription in
+            client.GetSubscriptions().GetAllAsync(cancellationToken))
+        {
+            names.Add(subscription.Data.DisplayName);
+        }
 
-- Reuse the registered client instead of constructing one per operation.
-- Calls that return a cached or singleton value reuse the same instance until the owning service is disposed.
-- Dispose instances you own when their scope ends so held resources can be released.
+        return names;
+    }
+}
+```
+
+## Lifecycle and authentication behavior
+
+- The `ArmClient` is created on first use and reused afterward.
+- Missing tenant, client ID, or secret configuration fails initialization.
+- Configuration and secret rotation do not alter an initialized client; replace the utility instance to use new credentials.
+- Azure authorization is evaluated by ARM for each resource operation. Possessing a valid client secret does not grant access without the corresponding RBAC assignment.
+- Let DI dispose the utility.
+
+This package specifically uses `ClientSecretCredential`. Workloads that can use managed identity or workload identity should construct `ArmClient` with the appropriate `TokenCredential` instead of storing a client secret.
