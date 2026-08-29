@@ -10,7 +10,7 @@ using Soenneker.Utils.AsyncSingleton;
 
 namespace Soenneker.Azure.Utils.ArmClientUtil;
 
-///<inheritdoc cref="IArmClientUtil"/>
+/// <inheritdoc cref="IArmClientUtil"/>
 public sealed class ArmClientUtil : IArmClientUtil
 {
     private readonly AsyncSingleton<ArmClient> _client;
