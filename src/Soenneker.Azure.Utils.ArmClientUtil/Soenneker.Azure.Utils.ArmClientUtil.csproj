@@ -44,9 +44,14 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Azure.Identity" Version="1.21.0" />
         <PackageReference Include="Azure.ResourceManager" Version="1.14.0" />
         <PackageReference Include="Soenneker.Extensions.Configuration" Version="4.0.895" />
         <PackageReference Include="Soenneker.Utils.AsyncSingleton" Version="4.0.849" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Azure.Core" Version="1.53.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.12" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.12" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.12" />
     </ItemGroup>
 </Project>
