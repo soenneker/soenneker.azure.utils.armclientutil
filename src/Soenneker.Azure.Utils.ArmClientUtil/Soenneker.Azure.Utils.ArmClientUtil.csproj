@@ -50,7 +50,7 @@
         <PackageReference Include="Soenneker.Utils.AsyncSingleton" Version="4.0.855" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Azure.Core" Version="1.62.0" />
+        <PackageReference Include="Azure.Core" Version="1.63.0" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.12" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.12" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.12" />
