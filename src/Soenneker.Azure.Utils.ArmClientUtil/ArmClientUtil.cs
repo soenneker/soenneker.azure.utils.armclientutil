@@ -26,9 +26,9 @@ public sealed class ArmClientUtil : IArmClientUtil
 
     private ArmClient CreateClient()
     {
-        var tenantId = _configuration.GetValueStrict<string>("Azure:TenantId");
-        var appRegistrationId = _configuration.GetValueStrict<string>("Azure:AppRegistration:Id");
-        var appRegistrationSecret = _configuration.GetValueStrict<string>("Azure:AppRegistration:Secret");
+        var tenantId = _configuration.GetStringStrict("Azure:TenantId");
+        var appRegistrationId = _configuration.GetStringStrict("Azure:AppRegistration:Id");
+        var appRegistrationSecret = _configuration.GetStringStrict("Azure:AppRegistration:Secret");
 
         _logger.LogDebug("Initializing Azure ArmClient...");
 
